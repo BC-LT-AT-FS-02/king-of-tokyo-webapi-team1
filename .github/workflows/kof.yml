@@ -1,9 +1,6 @@
 name: King of Tokyo
 
-on:
-  push:
-    paths:
-      - 'KOF/**'
+on: [push]  
 
 jobs:
   build:
