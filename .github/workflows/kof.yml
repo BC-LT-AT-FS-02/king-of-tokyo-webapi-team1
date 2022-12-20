@@ -40,4 +40,4 @@ jobs:
         if: ${{ always() }}
       - uses: actions/checkout@v3
       - name: Build the Docker image
-        run: docker build . --file Game/Dockerfile --tag kot-image:$(date +%s)
+        run: docker build . --file Dockerfile --tag kot-image:$(date +%s)
