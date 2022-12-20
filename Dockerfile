@@ -3,7 +3,7 @@ WORKDIR /Game
 # Copy everything
 COPY . ./
 # Restore as distinct layers
-RUN dotnet restore
+RUN cd Game && dotnet restore
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
@@ -12,7 +12,7 @@ WORKDIR /Game
 # Copy everything
 COPY . ./
 # Run all test cases
-RUN dotnet test
+RUN cd Game && dotnet test
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
