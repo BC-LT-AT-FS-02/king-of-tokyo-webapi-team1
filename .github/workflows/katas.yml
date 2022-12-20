@@ -1,9 +1,9 @@
-name: King of Tokyo
+name: Katas
 
 on:
   push:
     paths:
-      - 'KOF/**'
+      - 'katas/**'
 
 jobs:
   build:
@@ -18,13 +18,13 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - name: Restore tools
-        run: dotnet tool restore --tool-manifest KOF/.config/dotnet-tools.json
+        run: dotnet tool restore --tool-manifest katas/.config/dotnet-tools.json
       - name: Build
-        run: dotnet build KOF/
+        run: dotnet build katas/
       - name: Check format issues
-        run: dotnet format --verify-no-changes -v d KOF/
+        run: dotnet format --verify-no-changes -v d katas/
       - name: Run tests
-        run: dotnet test KOF/ -l html --collect:"XPlat Code Coverage" --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        run: dotnet test katas/ -l html --collect:"XPlat Code Coverage" --results-directory "TestResults-${{ matrix.dotnet-version }}"
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
@@ -33,11 +33,11 @@ jobs:
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
       - name: Generate code coverage report
-        run: cd KOF/; dotnet reportgenerator -reports:"../TestResults-${{ matrix.dotnet-version }}/**/*.cobertura.xml" -targetdir:".coveragereport"
+        run: cd katas/; dotnet reportgenerator -reports:"../TestResults-${{ matrix.dotnet-version }}/**/*.cobertura.xml" -targetdir:".coveragereport"
       - name: Upload code coverage report
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-${{ matrix.dotnet-version }}
-          path: KOF/.coveragereport
+          path: katas/.coveragereport
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
