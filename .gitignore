@@ -6,6 +6,8 @@
 # Code Coverage report
 .coveragereport/
 
+out/
+
 # User-specific files
 *.rsuser
 *.suo
