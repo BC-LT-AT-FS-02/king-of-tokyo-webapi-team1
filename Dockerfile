@@ -17,6 +17,6 @@ RUN cd Game && dotnet test
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /
-COPY --from=build-env /out .
+COPY --from=build-env Game/out .
 ENV ASPNETCORE_URLS=http://+:7021
 ENTRYPOINT ["dotnet", "KOF.dll"]
