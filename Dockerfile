@@ -5,7 +5,7 @@ COPY . ./
 # Restore as distinct layers
 RUN cd Game && dotnet restore
 # Build and publish a release
-RUN dotnet publish -c Release -o out
+RUN cd Game && dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0
 WORKDIR /Game
