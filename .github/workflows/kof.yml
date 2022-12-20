@@ -41,3 +41,17 @@ jobs:
           path: KOF/.coveragereport
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+
+version: '1'
+
+services:
+  KOF:
+    image: ${DOCKER_REGISTRY-}KOF
+    build:
+      context: .
+      dockerfile: Game/Dockerfile
+    ports:
+      - "7021:80"
+
+external1:
+    image: redis
