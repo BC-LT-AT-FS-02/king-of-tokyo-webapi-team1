@@ -51,4 +51,4 @@ jobs:
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
-        run: docker push jorgechce/kot-image:kot-image:v(${{ github.run.id }} / 100).(${{ github.run.id }} % 100)
+        run: docker push jorgechce/kot-image:kot-image:v(${{ github.run.id / 100}}).(${{ github.run.id % 100}})
