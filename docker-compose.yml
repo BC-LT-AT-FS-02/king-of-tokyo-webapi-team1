@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  kot:
+    build: .
+    image: "kot-image:latest"
+    ports:
+      - "7021:7021"
