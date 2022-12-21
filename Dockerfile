@@ -5,7 +5,7 @@ COPY . ./
 # Build kot app
 RUN cd Game && dotnet build
 # Run all test cases
-RUN cd Game && dotnet test
+RUN cd GameTest && dotnet test
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /
