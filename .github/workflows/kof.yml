@@ -39,5 +39,5 @@ jobs:
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
       - uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kot-image:$(date +%s)
+      - name: Build the Docker compose image
+        run: docker-compose build kot
