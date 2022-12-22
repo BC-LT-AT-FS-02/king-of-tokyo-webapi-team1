@@ -43,7 +43,7 @@ jobs:
         run: docker build . --file Dockerfile --tag kot-image
         # Log in to Docker Hub
       - name: Login to Docker Hub
-        run: docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: docker login -u adrielamorim -p dckr_pat_JE7Ut5aKSqxaq9CtgkOWvae8OdE
 
         # Set unsecure commands to true
       - name: Set unsecure commands to true
@@ -58,11 +58,9 @@ jobs:
           
         # Tag the Docker image
       - name: Tag the Docker image
-        run: docker tag kot-image:latest jorgechce/king-of-tokyo/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker tag kot-image:latest adrialamorim/kot-image:v$MASTER_VERSION.$LESSER_VERSION
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
         run: |
-          docker logout
-          docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push jorgechce/king-of-tokyo/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+          docker push adrielamorim/kot-image:v$MASTER_VERSION.$LESSER_VERSION
