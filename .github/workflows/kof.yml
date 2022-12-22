@@ -66,4 +66,3 @@ jobs:
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
         run: docker push adrielamorim/kot-image:v$MASTER_VERSION.$LESSER_VERSION
-
