@@ -40,16 +40,16 @@ jobs:
       #   if: ${{ always() }}
       - uses: actions/checkout@v3
 
+        # Set unsecure commands to true
+      - name: Set unsecure commands to true
+        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
         # Set variables
       - name: Sets variables
         run: |
           echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
           echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
-
-        # Set unsecure commands to true
-      - name: Set unsecure commands to true
-        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
-        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
 
         # Build image
       - name: Build the Docker image
