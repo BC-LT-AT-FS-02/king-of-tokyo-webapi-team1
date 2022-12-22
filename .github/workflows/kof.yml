@@ -53,4 +53,4 @@ jobs:
       - name: Push the Docker image
         run: echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_ID/100))
         run: echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_ID%100))
-        run: docker push jorgechce/kot-image:kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        - run: docker push jorgechce/kot-image:kot-image:v$MASTER_VERSION.$LESSER_VERSION
