@@ -38,7 +38,7 @@ jobs:
       #     path: .coveragereport
       #   # Use always() to always run this step to publish test results when there are test failures
       #   if: ${{ always() }}
-
+      - uses: actions/checkout@v3
         # Set unsecure commands to true
       - name: Set unsecure commands to true
         id: ACTIONS_ALLOW_UNSECURE_COMMANDS
@@ -50,8 +50,6 @@ jobs:
           echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
           echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
           
-
-      - uses: actions/checkout@v3
       - name: Build | Tag | Push the Docker image
         run: |
           docker build . --file Dockerfile --tag kot-image
