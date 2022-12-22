@@ -39,8 +39,17 @@ jobs:
       #   # Use always() to always run this step to publish test results when there are test failures
       #   if: ${{ always() }}
       - uses: actions/checkout@v3
+
+        # Set variables
+      - name: Sets variables
+        run: |
+          echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
+          echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
+
+        # Build image
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kot-image
+        run: docker build . --file Dockerfile --tag kot-image:v$MASTER_VERSION.$LESSER_VERSION
+
         # Log in to Docker Hub
       - name: Login to Docker Hub
         run: docker login -u adrielamorim -p dckr_pat_JE7Ut5aKSqxaq9CtgkOWvae8OdE
@@ -49,12 +58,6 @@ jobs:
       - name: Set unsecure commands to true
         id: ACTIONS_ALLOW_UNSECURE_COMMANDS
         run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
-
-        # Set variables
-      - name: Sets variables
-        run: |
-          echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
-          echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
           
         # Tag the Docker image
       - name: Tag the Docker image
