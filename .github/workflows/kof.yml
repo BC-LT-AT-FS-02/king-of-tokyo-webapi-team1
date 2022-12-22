@@ -54,4 +54,4 @@ jobs:
         env:
           MASTER_VERSION: ${{ github.run.id }} / 100
           LESSER_VERSION: ${{ github.run.id }} % 100
-        run: docker push jorgechce/kot-image:kot-image:v${{ MASTER_VERSION }}.${{ LESSER_VERSION }}
+        run: docker push jorgechce/kot-image:kot-image:v$MASTER_VERSION.$LESSER_VERSION
