@@ -46,7 +46,7 @@ jobs:
         run: docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
 
         # Set unsecure commands to true
-      - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
+      - name: Set unsecure commands to true
         id: ACTIONS_ALLOW_UNSECURE_COMMANDS
         run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
 
@@ -62,4 +62,4 @@ jobs:
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
-        run: docker push jorgechce/kot-image:kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker push
