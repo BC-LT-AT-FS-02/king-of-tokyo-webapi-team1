@@ -61,8 +61,7 @@ jobs:
 
         # Tag the Docker image
       - name: Tag the Docker image
-        run: docker tag kot-image:v$MASTER_VERSION.$LESSER_VERSION /
-          adrielamorim/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker tag kot-image:v$MASTER_VERSION.$LESSER_VERSION adrielamorim/kot-image:v$MASTER_VERSION.$LESSER_VERSION
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
