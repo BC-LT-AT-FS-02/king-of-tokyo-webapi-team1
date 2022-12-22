@@ -52,6 +52,7 @@ jobs:
         run: |
           echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
           echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
+          echo ::set-env name=IMAGE::$((kot-image:v$MASTER_VERSION.$LESSER_VERSION))
 
         # Build image
       - name: Build the Docker image
