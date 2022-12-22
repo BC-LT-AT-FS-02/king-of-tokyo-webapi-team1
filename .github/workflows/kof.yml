@@ -48,7 +48,6 @@ jobs:
         # Create env file
       - name: Create env file
         run: |
-        touch .env
           echo MASTER_VERSION=$(($GITHUB_RUN_ID/100)) >> .env
           echo LESSER_VERSION=$(($GITHUB_RUN_ID%100)) >> .env
 
