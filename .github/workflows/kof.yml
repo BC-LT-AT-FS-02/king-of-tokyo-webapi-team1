@@ -65,4 +65,4 @@ jobs:
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
-        run: docker kot-image:v$MASTER_VERSION.$LESSER_VERSION push kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker push kot-image:v$MASTER_VERSION.$LESSER_VERSION
