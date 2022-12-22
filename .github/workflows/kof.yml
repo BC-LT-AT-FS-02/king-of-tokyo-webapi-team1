@@ -46,7 +46,7 @@ jobs:
         run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
 
         # Set variables
-      - name: Sets variables
+      - name: Set variables
         run: |
           echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
           echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
@@ -54,10 +54,6 @@ jobs:
         # Build docker-compose image
       - name: Build the Docker compose image
         run: docker-compose build kot
-
-      #   # Build image
-      # - name: Build the Docker image
-      #   run: docker build . --file Dockerfile --tag kot-image:v$MASTER_VERSION.$LESSER_VERSION
 
         # Log in to Docker Hub
       - name: Login to Docker Hub
