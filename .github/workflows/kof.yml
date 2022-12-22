@@ -55,7 +55,7 @@ jobs:
 
         # Build image
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag $IMAGE
+        run: docker build . --file Dockerfile --tag kot-image:v$MASTER_VERSION.$LESSER_VERSION
 
         # Log in to Docker Hub
       - name: Login to Docker Hub
@@ -63,8 +63,8 @@ jobs:
 
         # Tag the Docker image
       - name: Tag the Docker image
-        run: docker tag $IMAGE adrialamorim/$IMAGE
+        run: docker tag kot-image:latest adrialamorim/$IMAGE
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
-        run: docker push $IMAGE
+        run: docker $IMAGE push $IMAGE
