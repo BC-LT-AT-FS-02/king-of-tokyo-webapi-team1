@@ -39,6 +39,12 @@ jobs:
       #   # Use always() to always run this step to publish test results when there are test failures
       #   if: ${{ always() }}
       - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag kot-image
+        # Log in to Docker Hub
+      - name: Login to Docker Hub
+        run: docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
         # Set unsecure commands to true
       - name: Set unsecure commands to true
         id: ACTIONS_ALLOW_UNSECURE_COMMANDS
@@ -50,12 +56,13 @@ jobs:
           echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
           echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
           
-      - name: Build | Tag | Push the Docker image
-        run: |
-          docker build . --file Dockerfile --tag kot-image
-        # Log in to Docker Hub
-          docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
         # Tag the Docker image
-          docker tag kot-image:latest jorgechce/king-of-tokyo/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+      - name: Tag the Docker image
+        run: docker tag kot-image:latest jorgechce/king-of-tokyo/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+
         # Push the Docker image to Docker Hub
+      - name: Push the Docker image
+        run: |
+          docker logout
+          docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
           docker push jorgechce/king-of-tokyo/kot-image:v$MASTER_VERSION.$LESSER_VERSION
