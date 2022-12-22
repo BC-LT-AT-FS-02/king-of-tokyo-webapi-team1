@@ -47,13 +47,15 @@ jobs:
 
         # Set variables
       - name: Sets variables
+        env:
+          IMAGE: kot-image:v$MASTER_VERSION.$LESSER_VERSION
         run: |
           echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
           echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
 
         # Build image
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker build . --file Dockerfile --tag $IMAGE
 
         # Log in to Docker Hub
       - name: Login to Docker Hub
@@ -61,8 +63,8 @@ jobs:
 
         # Tag the Docker image
       - name: Tag the Docker image
-        run: docker tag kot-image:latest adrialamorim/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker tag $IMAGE adrialamorim/$IMAGE
 
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
-        run: docker push kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        run: docker push $IMAGE
