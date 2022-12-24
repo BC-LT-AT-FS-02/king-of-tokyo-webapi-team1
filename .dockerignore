@@ -1,5 +1,6 @@
 .config/
 .coveragereport/
+.sonarqube/
 .github/
 Game/bin/
 Game/obj/
