@@ -1,6 +1,12 @@
 name: King of Tokyo
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+      - test
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -38,8 +44,19 @@ jobs:
           path: .coveragereport
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+      - name: Static Code Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION}}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY}}
+        run: |
+          dotnet tool install --global dotnet-coverage
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin -k:"$SONAR_PROJECT_KEY" -o:"$SONAR_ORGANIZATION" -d:sonar.login="$SONAR_TOKEN" -d:sonar.host.url="https://sonarcloud.io" -d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+          dotnet build --no-incremental KOF.sln
+          dotnet-coverage collect 'dotnet test' -f xml -o 'coverage.xml'
+          dotnet sonarscanner end -d:sonar.login="$SONAR_TOKEN"
       - uses: actions/checkout@v3
-
         # Set unsecure commands to true
       - name: Set unsecure commands to true
         id: ACTIONS_ALLOW_UNSECURE_COMMANDS
@@ -66,3 +83,7 @@ jobs:
         # Push the Docker image to Docker Hub
       - name: Push the Docker image
         run: docker push jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+        
+        # Log out of Docker Hub
+      - name: Log out of Docker Hub
+        run: docker logout
