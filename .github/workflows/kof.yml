@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: devops
     strategy:
       matrix:
         dotnet-version: ['6.0.x' ]
