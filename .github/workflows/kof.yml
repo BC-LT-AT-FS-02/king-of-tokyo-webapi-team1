@@ -48,10 +48,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION}}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY}}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           dotnet tool install --global dotnet-coverage
           dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin -k:"$SONAR_PROJECT_KEY" -o:"$SONAR_ORGANIZATION" -d:sonar.login="$SONAR_TOKEN" -d:sonar.host.url="https://sonarcloud.io" -d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+          dotnet sonarscanner begin -k:"$SONAR_PROJECT_KEY" -o:"$SONAR_ORGANIZATION" -d:sonar.login="$SONAR_TOKEN" -d:sonar.host.url="$SONAR_HOST_URL" -d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
           dotnet build --no-incremental KOF.sln
           dotnet-coverage collect 'dotnet test' -f xml -o 'coverage.xml'
           dotnet sonarscanner end -d:sonar.login="$SONAR_TOKEN"
@@ -65,6 +66,7 @@ jobs:
         timeout-minutes: 3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - uses: actions/checkout@v3
         # Set unsecure commands to true
       - name: Set unsecure commands to true
