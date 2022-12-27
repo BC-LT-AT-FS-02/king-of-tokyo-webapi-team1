@@ -1,4 +1,5 @@
 .config/
+.sonarqube/
 .coveragereport/
 .github/
 Game/bin/

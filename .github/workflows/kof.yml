@@ -56,6 +56,16 @@ jobs:
           dotnet build --no-incremental KOF.sln
           dotnet-coverage collect 'dotnet test' -f xml -o 'coverage.xml'
           dotnet sonarscanner end -d:sonar.login="$SONAR_TOKEN"
+        # Check the Quality Gate status.
+      - name: Quality Gate
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          scanMetadataReportFile: .sonarqube/out/.sonar/report-task.txt
+        # Force to fail step after specific time.
+        timeout-minutes: 3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - uses: actions/checkout@v3
         # Set unsecure commands to true
       - name: Set unsecure commands to true
