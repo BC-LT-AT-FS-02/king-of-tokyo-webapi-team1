@@ -19,14 +19,19 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
+          
       - name: Restore tools
         run: dotnet tool restore --tool-manifest .config/dotnet-tools.json
+
       - name: Build
         run: dotnet build
+
       - name: Check format issues
         run: dotnet format --verify-no-changes -v d
+
       - name: Run tests
         run: dotnet test -l html --collect:"XPlat Code Coverage" --results-directory "TestResults-${{ matrix.dotnet-version }}"
+
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
@@ -34,8 +39,10 @@ jobs:
           path: TestResults-${{ matrix.dotnet-version }}
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+
       - name: Generate code coverage report
         run: dotnet reportgenerator -reports:"TestResults-${{ matrix.dotnet-version }}/**/*.cobertura.xml" -targetdir:".coveragereport"
+
       - name: Upload code coverage report
         uses: actions/upload-artifact@v3
         with:
@@ -43,6 +50,7 @@ jobs:
           path: .coveragereport
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+
       - name: Static Code Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
@@ -56,6 +64,7 @@ jobs:
           dotnet build --no-incremental KOF.sln
           dotnet-coverage collect 'dotnet test' -f xml -o 'coverage.xml'
           dotnet sonarscanner end -d:sonar.login="$SONAR_TOKEN"
+
         # Check the Quality Gate status.
       - name: Quality Gate
         id: sonarqube-quality-gate-check
@@ -67,6 +76,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
       - uses: actions/checkout@v3
         # Set unsecure commands to true
       - name: Set unsecure commands to true
@@ -98,3 +108,9 @@ jobs:
         # Log out of Docker Hub
       - name: Log out of Docker Hub
         run: docker logout
+
+      - name: NuGet push
+        run: |
+          dotnet build -c Release
+          dotnet pack -c Release --no-build --output .
+          dotnet nuget push "*.nupkg" --api-key ${{secrets.API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
