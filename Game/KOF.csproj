@@ -7,7 +7,7 @@
     <IsPackable>True</IsPackable>
     <PackageId>King.Of.Tokyo.WebApi.Team1</PackageId>
     <Authors>Adriel Amorim, Jorge Chavez</Authors>
-    <Company>Jalasoft</Company>
+    <Company>Jalasoft-Team1</Company>
     <Description>KOT WebApi</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>DevOps, AT, Bootcamp, Jalasoft</PackageTags>
