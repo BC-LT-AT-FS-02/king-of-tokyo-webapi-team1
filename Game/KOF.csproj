@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>True</IsPackable>
-    <PackageId>King.Of.Tokyo.WebApi</PackageId>
+    <PackageId>King.Of.Tokyo.WebApi.Team1</PackageId>
     <Authors>Adriel Amorim, Jorge Chavez</Authors>
     <Company>Jalasoft</Company>
     <Description>KOT WebApi</Description>
