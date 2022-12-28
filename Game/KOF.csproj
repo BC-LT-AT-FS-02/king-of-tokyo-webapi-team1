@@ -4,6 +4,14 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>True</IsPackable>
+    <PackageId>Team1.King.Of.Tokyo.WebApi</PackageId>
+    <Authors>Adriel Amorim, Jorge Chavez</Authors>
+    <Company>Jalasoft-Team1</Company>
+    <Description>KOT WebApi</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>DevOps, AT, Bootcamp, Jalasoft</PackageTags>
+    <RepositoryUrl>https://github.com/BC-LT-AT-FS-02/king-of-tokyo-webapi-team1</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
