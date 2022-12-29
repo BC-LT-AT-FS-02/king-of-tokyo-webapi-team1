@@ -1,0 +1,33 @@
+name: KOT Build Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-image:
+    runs-on: team1
+    steps:
+      - uses: actions/checkout@v3
+
+        # Set unsecure commands to true
+      - name: Set unsecure commands to true
+        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+        # Set variables
+      - name: Set variables
+        run: |
+          echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
+          echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
+
+        # Docker Hub Step
+      - name: Docker Hub
+        run: |
+          docker-compose build kot
+          docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker tag kot-image:latest jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+          docker push jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+          docker image prune -a -f
+          docker logout
