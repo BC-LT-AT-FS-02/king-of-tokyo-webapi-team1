@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - main
-      - team1/split-workflow
 
 jobs:
-  build:
+  build-image:
     runs-on: team1
     steps:
       - uses: actions/checkout@v3
@@ -30,5 +29,5 @@ jobs:
           docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
           docker tag kot-image:latest jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
           docker push jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
-          docker rm kot
+          docker image prune -a -f
           docker logout
