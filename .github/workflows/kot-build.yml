@@ -1,4 +1,4 @@
-name: King of Tokyo
+name: KOT Build
 
 on:
   push:
@@ -76,38 +76,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-      - uses: actions/checkout@v3
-        # Set unsecure commands to true
-      - name: Set unsecure commands to true
-        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
-        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
-
-        # Set variables
-      - name: Set variables
-        run: |
-          echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
-          echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
-
-        # Build docker-compose image
-      - name: Build the Docker compose image
-        run: docker-compose build kot
-
-        # Log in to Docker Hub
-      - name: Login to Docker Hub
-        run: docker login -u jorgechce -p ${{ secrets.DOCKER_HUB_TOKEN }}
-
-        # Tag the Docker image
-      - name: Tag the Docker image
-        run: docker tag kot-image:latest jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
-
-        # Push the Docker image to Docker Hub
-      - name: Push the Docker image
-        run: docker push jorgechce/kot-image:v$MASTER_VERSION.$LESSER_VERSION
-        
-        # Log out of Docker Hub
-      - name: Log out of Docker Hub
-        run: docker logout
 
       - name: NuGet push
         run: |
