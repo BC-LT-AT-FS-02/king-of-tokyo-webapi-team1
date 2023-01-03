@@ -1,4 +1,4 @@
-name: KOT Build
+name: KOT Workflow
 
 on:
   push:
@@ -82,3 +82,82 @@ jobs:
           dotnet build -c Release
           dotnet pack -c Release --no-build --output .
           dotnet nuget push "*.nupkg" --api-key ${{secrets.API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+  build-image:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build
+    runs-on: team1
+    steps:
+      - uses: actions/checkout@v3
+
+        # Set unsecure commands to true
+      - name: Set unsecure commands to true
+        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+        # Set variables
+      - name: Set variables
+        run: |
+          echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
+          echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
+
+        # Docker Hub Step
+      - name: Docker Hub
+        run: |
+          docker-compose build kot
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker tag kot-image:latest ${{ secrets.DOCKER_USERNAME }}/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+          docker push ${{ secrets.DOCKER_USERNAME }}/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+          docker rmi ${{ secrets.DOCKER_USERNAME }}/kot-image:v$MASTER_VERSION.$LESSER_VERSION
+          docker logout
+
+  deploy-dev:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Set unsecure commands to true
+      - name: Set unsecure commands to true
+        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+        # Set variables
+      - name: Set variables
+        run: |
+          echo ::set-env name=MASTER_VERSION::$(($GITHUB_RUN_NUMBER/100))
+          echo ::set-env name=LESSER_VERSION::$(($GITHUB_RUN_NUMBER%100))
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "USERNAME=${{secrets.DOCKER_USERNAME}}" >>.env
+          echo "IMAGE_NAME=kot-image" >> .env
+          echo "MASTER_VERSION=$MASTER_VERSION" >> .env
+          echo "LESSER_VERSION=$LESSER_VERSION" >> .env
+          cat .env
+
+      - name: Get Docker Credentials
+        run: |
+          echo "${{secrets.DOCKER_USERNAME}}" > docker_user
+          echo "${{ secrets.DOCKER_HUB_TOKEN }}" > docker_pass
+
+      - name: Get PK
+        run: |
+          echo "${{secrets.AWS_SSH_PK}}" >> pk
+          chmod 400 pk
+
+      - name: Copy files for deployment
+        run: |
+          scp -i pk -o StrictHostKeyChecking=no .env  ./docker-compose-dev.yml docker_user docker_pass ubuntu@${{secrets.AWS_PUBLIC_IP}}:/home/ubuntu
+
+      - name: Deploy KOT Web API into Dev Server
+        run: |
+          ssh -i pk -oStrictHostKeyChecking=no ubuntu@${{secrets.AWS_PUBLIC_IP}} <<-SHELL
+            sudo docker login -u $(cat docker_user) -p $(cat docker_pass)
+            sudo docker-compose -f docker-compose-dev.yml  up -d
+            sudo docker logout
+            rm -f docker_user 
+            rm -f docker_pass
+          SHELL

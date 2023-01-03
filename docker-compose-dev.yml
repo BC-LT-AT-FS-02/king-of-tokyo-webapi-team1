@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  web:
+    container_name: kot
+    image: $USERNAME/$IMAGE_NAME:v$MASTER_VERSION.$LESSER_VERSION
+    ports:
+      - "7021:7021"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:7021
